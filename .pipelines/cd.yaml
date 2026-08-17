@@ -1,0 +1,63 @@
+---
+trigger:
+  branches:
+    include:
+      - main
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: ACME_ADO_PROJECT/application-pipeline-templates
+
+parameters:
+
+  - name: terraform_action
+    displayName: Terraform Action
+    type: string
+    default: apply
+    values:
+      - apply
+      - destroy
+
+  - name: terraform_cli_version
+    displayName: Terraform CLI Version
+    type: string
+    default: '1.14.9'
+
+lockBehavior: sequential
+
+extends:
+  template: .pipelines/application-cd-template.yaml@templates
+
+  parameters:
+
+    terraform_action:
+      ${{ parameters.terraform_action }}
+
+    terraform_cli_version:
+      ${{ parameters.terraform_cli_version }}
+
+    root_module_folder_relative_path:
+      '.'
+
+    target_subscription_id:
+      '<MANAGEMENT-SUBSCRIPTION-ID>'
+
+    backend_resource_group_name:
+      'rg-app-tf-bootstrap-uks-001'
+
+    backend_storage_account_name:
+      '<BOOTSTRAP-STORAGE-ACCOUNT-NAME>'
+
+    backend_container_name:
+      'tfstate'
+
+    backend_key:
+      'app-bootstrap.tfstate'
+
+    plan_service_connection:
+      'sc-acmealz-dev-plan'
+
+    apply_service_connection:
+      'sc-acmealz-dev-apply'
