@@ -56,6 +56,31 @@ resource "azurerm_role_assignment" "apply_state" {
   principal_type = "ServicePrincipal"
 }
 
+#
+# ----------------------------------------------------------
+# Management subscription permissions
+# ----------------------------------------------------------
+#
+
+resource "azurerm_role_assignment" "plan_management_reader" {
+  scope = "/subscriptions/${var.management_subscription_id}"
+
+  role_definition_name = "Reader"
+
+  principal_id = azurerm_user_assigned_identity.plan.principal_id
+
+  principal_type = "ServicePrincipal"
+}
+
+resource "azurerm_role_assignment" "apply_management_reader" {
+  scope = "/subscriptions/${var.management_subscription_id}"
+
+  role_definition_name = "Reader"
+
+  principal_id = azurerm_user_assigned_identity.apply.principal_id
+
+  principal_type = "ServicePrincipal"
+}
 
 #
 # ----------------------------------------------------------
