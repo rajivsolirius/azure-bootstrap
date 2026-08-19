@@ -107,3 +107,45 @@ resource "azurerm_role_assignment" "apply_contributor" {
 
   principal_type = "ServicePrincipal"
 }
+
+#
+# ----------------------------------------------------------
+# Custom role allowing Resource Provider registration only
+# ----------------------------------------------------------
+#
+
+resource "azurerm_role_definition" "resource_provider_registration" {
+  name        = "Application Resource Provider Registration Operator"
+  scope       = "/subscriptions/${var.app01_subscription_id}"
+  description = "Allows registration and reading of Azure Resource Providers in the App01 subscription."
+
+  permissions {
+    actions = [
+      "Microsoft.Resources/subscriptions/providers/read",
+      "Microsoft.Resources/subscriptions/providers/register/action"
+    ]
+
+    not_actions = []
+  }
+
+  assignable_scopes = [
+    "/subscriptions/${var.app01_subscription_id}"
+  ]
+}
+
+
+#
+# ----------------------------------------------------------
+# Assign custom RP-registration role to Plan identity Only
+# ----------------------------------------------------------
+#
+
+resource "azurerm_role_assignment" "plan_resource_provider_registration" {
+  scope = "/subscriptions/${var.app01_subscription_id}"
+
+  role_definition_id = azurerm_role_definition.resource_provider_registration.role_definition_resource_id
+
+  principal_id = azurerm_user_assigned_identity.plan.principal_id
+
+  principal_type = "ServicePrincipal"
+}
