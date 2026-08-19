@@ -33,3 +33,13 @@ variable "app01_state_storage_account_name" {
   description = "Storage Account name for the App01 Terraform state."
   type        = string
 }
+
+variable "bootstrap_backend_resource_group_name" {
+  description = "Resource Group containing the Application bootstrap Terraform backend."
+  type        = string
+}
+
+variable "bootstrap_backend_storage_account_name" {
+  description = "Storage Account containing the Application bootstrap Terraform state."
+  type        = string
+}

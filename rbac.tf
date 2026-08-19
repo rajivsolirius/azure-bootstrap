@@ -1,3 +1,35 @@
+locals {
+  bootstrap_state_container_scope = join("", [
+    "/subscriptions/",
+    var.management_subscription_id,
+    "/resourceGroups/",
+    var.bootstrap_backend_resource_group_name,
+    "/providers/Microsoft.Storage/storageAccounts/",
+    var.bootstrap_backend_storage_account_name,
+    "/blobServices/default/containers/tfstate"
+  ])
+}
+
+#
+# ----------------------------------------------------------
+# App Backend Terraform state access
+# ----------------------------------------------------------
+#
+
+resource "azurerm_role_assignment" "plan_bootstrap_state" {
+  scope                = local.bootstrap_state_container_scope
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_user_assigned_identity.plan.principal_id
+  principal_type       = "ServicePrincipal"
+}
+
+resource "azurerm_role_assignment" "apply_bootstrap_state" {
+  scope                = local.bootstrap_state_container_scope
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_user_assigned_identity.apply.principal_id
+  principal_type       = "ServicePrincipal"
+}
+
 #
 # ----------------------------------------------------------
 # App01 Terraform state access
