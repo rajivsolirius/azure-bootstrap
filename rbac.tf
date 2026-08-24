@@ -208,6 +208,7 @@ resource "azurerm_role_definition" "app_hub_peering_operator" {
     ]
 
     not_actions = []
+    
   }
 
   assignable_scopes = [
@@ -287,6 +288,21 @@ resource "azurerm_role_assignment" "apply_private_dns_reader" {
   scope = local.private_dns_resource_group_scope
 
   role_definition_name = "Reader"
+
+  principal_id   = azurerm_user_assigned_identity.apply.principal_id
+  principal_type = "ServicePrincipal"
+}
+
+#
+# ---------------------------------------------------------------------------------------
+# The Apply Identity Needs to have ability to do Role Assignments in the App Landing Zone
+# ---------------------------------------------------------------------------------------
+#
+
+resource "azurerm_role_assignment" "apply_app01_rbac_administrator" {
+  scope = "/subscriptions/${var.app01_subscription_id}"
+
+  role_definition_name = "Role Based Access Control Administrator"
 
   principal_id   = azurerm_user_assigned_identity.apply.principal_id
   principal_type = "ServicePrincipal"
