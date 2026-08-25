@@ -75,6 +75,9 @@ variable "app01_private_dns_zone_names" {
   type        = set(string)
 
   default = [
-    "privatelink.vaultcore.azure.net"
+    "privatelink.vaultcore.azure.net",
+    "privatelink.uks.backup.windowsazure.com",
+    "privatelink.blob.core.windows.net",
+    "privatelink.queue.core.windows.net"
   ]
 }
