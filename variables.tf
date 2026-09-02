@@ -3,10 +3,10 @@ variable "management_subscription_id" {
   type        = string
 }
 
-variable "app01_subscription_id" {
-  description = "Subscription ID of Application Landing Zone 01."
-  type        = string
-}
+#variable "app01_subscription_id" {
+#  description = "Subscription ID of Application Landing Zone 01."
+#  type        = string
+#}
 
 variable "location" {
   description = "Azure region."
@@ -29,10 +29,10 @@ variable "private_dns_zone_id" {
   type        = string
 }
 
-variable "app01_state_storage_account_name" {
-  description = "Storage Account name for the App01 Terraform state."
-  type        = string
-}
+#variable "app01_state_storage_account_name" {
+#  description = "Storage Account name for the App01 Terraform state."
+#  type        = string
+#}
 
 variable "bootstrap_backend_resource_group_name" {
   description = "Resource Group containing the Application bootstrap Terraform backend."
@@ -70,8 +70,8 @@ variable "private_dns_resource_group_name" {
   type        = string
 }
 
-variable "app01_private_dns_zone_names" {
-  description = "Private DNS zones that App01 Terraform is permitted to integrate with."
+variable "application_private_dns_zone_names" {
+  description = "Central Private DNS zones that App Landing Zones Terraform is permitted to integrate with."
   type        = set(string)
 
   default = [
@@ -80,4 +80,13 @@ variable "app01_private_dns_zone_names" {
     "privatelink.blob.core.windows.net",
     "privatelink.queue.core.windows.net"
   ]
+}
+
+variable "application_landing_zones" {
+  description = "Application Landing Zones managed by the shared Terraform Plan and Apply identities."
+
+  type = map(object({
+    subscription_id            = string
+    state_storage_account_name = string
+  }))
 }
